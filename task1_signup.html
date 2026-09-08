@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Form & Dashboard - NCC Recruitment Task 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.2);
+        }
+
+        input.error {
+            border-color: #e74c3c;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .view-toggle button {
+            flex: 1;
+            padding: 10px;
+            margin-top: 0;
+            background: #f0f0f0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .view-toggle button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 30px 20px;
+            font-size: 14px;
+        }
+
+        .password-cell {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            max-width: 150px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+                max-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            .password-cell {
+                max-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="view-toggle">
+            <button class="toggle-btn active" data-view="form">Signup</button>
+            <button class="toggle-btn" data-view="dashboard">Dashboard</button>
+        </div>
+
+        <!-- Signup Form Section -->
+        <div class="form-section active">
+            <div class="header">
+                <h1>Create Account</h1>
+                <p>Join Newton School Coding Club</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✓ Account created successfully!
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        placeholder="Enter your username"
+                        required
+                    >
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        placeholder="Enter your email"
+                        required
+                    >
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="At least 6 characters"
+                        required
+                    >
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="signup-btn">Signup</button>
+            </form>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div class="dashboard">
+            <div class="header">
+                <h1>Dashboard</h1>
+                <p>Registered Users</p>
+            </div>
+
+            <div class="table-container" id="tableContainer">
+                <div class="no-data">No users registered yet.</div>
+            </div>
+
+            <button id="clearAllBtn" style="background: #95a5a6; display: none; margin-top: 20px;">
+                Clear All Data
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Form validation and submission
+        const signupForm = document.getElementById('signupForm');
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const successMessage = document.getElementById('successMessage');
+
+        // Email regex pattern
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Simple hash function for password (not secure, for demo only)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return 'HASH_' + Math.abs(hash).toString(16);
+        }
+
+        // Validation functions
+        function validateUsername(username) {
+            if (username.trim() === '') {
+                return { valid: false, error: 'Username cannot be empty' };
+            }
+            if (username.length < 3) {
+                return { valid: false, error: 'Username must be at least 3 characters' };
+            }
+            return { valid: true };
+        }
+
+        function validateEmail(email) {
+            if (!emailRegex.test(email)) {
+                return { valid: false, error: 'Please enter a valid email address' };
+            }
+            return { valid: true };
+        }
+
+        function validatePassword(password) {
+            if (password.length < 6) {
+                return { valid: false, error: 'Password must be at least 6 characters' };
+            }
+            return { valid: true };
+        }
+
+        // Show/hide error messages
+        function showError(inputElement, errorElement, message) {
+            inputElement.classList.add('error');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function hideError(inputElement, errorElement) {
+            inputElement.classList.remove('error');
+            errorElement.classList.remove('show');
+        }
+
+        // Form submission
+        signupForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const username = usernameInput.value;
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            let isValid = true;
+
+            // Validate username
+            const usernameValidation = validateUsername(username);
+            if (!usernameValidation.valid) {
+                showError(usernameInput, document.getElementById('usernameError'), usernameValidation.error);
+                isValid = false;
+            } else {
+                hideError(usernameInput, document.getElementById('usernameError'));
+            }
+
+            // Validate email
+            const emailValidation = validateEmail(email);
+            if (!emailValidation.valid) {
+                showError(emailInput, document.getElementById('emailError'), emailValidation.error);
+                isValid = false;
+            } else {
+                hideError(emailInput, document.getElementById('emailError'));
+            }
+
+            // Validate password
+            const passwordValidation = validatePassword(password);
+            if (!passwordValidation.valid) {
+                showError(passwordInput, document.getElementById('passwordError'), passwordValidation.error);
+                isValid = false;
+            } else {
+                hideError(passwordInput, document.getElementById('passwordError'));
+            }
+
+            if (isValid) {
+                // Hash the password
+                const hashedPassword = simpleHash(password);
+
+                // Get existing users from localStorage
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+
+                // Create new user object
+                const newUser = {
+                    id: Date.now(),
+                    username: username,
+                    email: email,
+                    password: hashedPassword
+                };
+
+                // Add new user to array
+                users.push(newUser);
+
+                // Save to localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Show success message
+                successMessage.classList.add('show');
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+
+                // Reset form
+                signupForm.reset();
+
+                // Update dashboard
+                loadDashboard();
+            }
+        });
+
+        // Load and display dashboard
+        function loadDashboard() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const tableContainer = document.getElementById('tableContainer');
+            const clearAllBtn = document.getElementById('clearAllBtn');
+
+            if (users.length === 0) {
+                tableContainer.innerHTML = '<div class="no-data">No users registered yet.</div>';
+                clearAllBtn.style.display = 'none';
+                return;
+            }
+
+            clearAllBtn.style.display = 'block';
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Password (Hashed)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            users.forEach(user => {
+                tableHTML += `
+                    <tr>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td class="password-cell">${user.password}</td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteUser(${user.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        // Delete user function
+        function deleteUser(userId) {
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            users = users.filter(user => user.id !== userId);
+            localStorage.setItem('users', JSON.stringify(users));
+            loadDashboard();
+        }
+
+        // Toggle between form and dashboard views
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const view = this.dataset.view;
+
+                // Update active button
+                document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Update visible section
+                document.querySelectorAll('.form-section, .dashboard').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                if (view === 'form') {
+                    document.querySelector('.form-section').classList.add('active');
+                } else {
+                    document.querySelector('.dashboard').classList.add('active');
+                    loadDashboard();
+                }
+            });
+        });
+
+        // Clear all data function
+        document.getElementById('clearAllBtn').addEventListener('click', function () {
+            if (confirm('Are you sure you want to delete all user data?')) {
+                localStorage.removeItem('users');
+                loadDashboard();
+            }
+        });
+
+        // Load dashboard on page load
+        window.addEventListener('load', loadDashboard);
+    </script>
+</body>
+</html>
